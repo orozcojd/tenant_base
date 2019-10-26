@@ -1,0 +1,63 @@
+#vapp {
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.main-container {
+  margin: 24px;
+}
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+.flex-start {
+  justify-content: start;
+  align-items: start;
+}
+.flex-between {
+  justify-content: start;
+  align-content: space-between;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-col {
+  flex-direction: column;
+}
+.items-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: start;
+  flex-wrap: wrap;
+  /* margin: 16px; */
+  width: 100%;
+}
+.item-data {
+  width: 100%;
+}
+.cursor-point {
+  cursor: pointer;
+}
+.blur-data {
+  filter: blur(3px);
+  user-select:none;
+}
+.inner-item {
+  height: 100%;
+  overflow: scroll;
+}
+.kv-item {
+  padding: 16px;
+  margin: 8px;
+  width: 400px;
+  height: 75px;
+  background-color:#add8e6;
+  border-radius: 4px;
+}
+.space-between {
+  margin: 14px 14px;
+}
+.mt-md {
+  margin-top: 24px;
+}

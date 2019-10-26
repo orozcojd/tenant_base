@@ -1,0 +1,114 @@
+<DOCTYPE html>
+    <html>
+    <head>
+      <title>Tent Base Data Store</title>
+      <meta charset='utf-8' />
+      <link rel="stylesheet" type="text/css" href="static/main.css">
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src="https://unpkg.com/vuex"></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    </head>
+    <body>
+      <div id="vapp">
+        <div class="main-container">
+          <div class="flex-wrap flex-start flex-col">
+            <h1>Tenant Base Data Store</h1>
+            <!-- <div class="items-container">
+            </div> -->
+            <display-items class="mt-md"></display-items>
+          </div>
+        </div>
+      </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script>
+    let mapState = Vuex.mapState
+    let mapActions = Vuex.mapActions
+    const store = new Vuex.Store({
+    state: {
+      items: []
+    },
+    actions: {
+      async getItems( context ) {
+          await axios.get('https://jsonplaceholder.typicode.com/posts/').then(function(rsp) {
+            console.log(rsp.data)
+            context.commit('fetchItems', rsp.data)
+          }), function(err) {
+            /* Handle Error */
+          }
+      }
+    },
+    mutations: {
+      fetchItems(state, items) {
+        state.items = items
+      }
+    }
+  })
+  Vue.component('display-items', {
+    template: `<div>
+      <h2> Existing Items </h2>
+      <div class="items-container" v-if="loaded">
+          <div
+            class="kv-item"
+            v-for="(item, i) in items"
+            :key="i"
+          >
+            <div class="inner-item flex-wrap flex-between flex-row">
+              <div class="item-data">
+                KEY: {{ item.id }}
+              </div>
+              <div class="item-data item-value">
+                <span>VALUE:</span> <span v-show class="blur-data cursor-point">{{ item.title }}</span>
+              </div>                
+            </div>
+          </div>
+          </div>
+          <div class="items-container mt-md" v-else> loading... </div>
+        </div>
+        
+      </div>
+    `,
+    data() {
+      return {
+        loaded: false,
+        active: true
+      }
+    },
+    async mounted() {
+      await this.getItems()
+      this.loaded = true
+    },
+    computed: {
+      ...mapState(['items']),
+      
+    },
+    methods: {
+      ...mapActions(['getItems'])
+    },
+    directives: {
+    show: {
+      // directive definition
+      inserted: function (el, binding, vnode) {
+        el.addEventListener('mousedown', e => {
+          el.classList.remove('blur-data')
+        })
+        el.addEventListener('mouseup', e => {
+          el.classList.add('blur-data')
+        })
+        el.addEventListener('mouseout', e => {
+          el.classList.add('blur-data')
+        })
+      }
+    }
+}
+  })
+    const vueApp = new Vue({
+      el: '#vapp',
+      store,
+      data: {
+      }
+    })
+    </script>
+    </body>
+    </html>
