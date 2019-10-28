@@ -2,3 +2,4 @@ node_modules
 tbvenv
 .DS_Store
 *.pyc 
+*.db

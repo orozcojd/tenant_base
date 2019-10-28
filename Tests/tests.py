@@ -10,7 +10,7 @@ class TestRoutes(unittest.TestCase):
     app.config['TESTING'] = True
     app.config['DEBUG'] = False
     app.config['WTF_CSRF_ENABLED'] = False
-    actions.init_db('items_db.db') # initialize db tables
+    # actions.init_db('items_db.db') # initialize db tables
     self.app = app.test_client()
   
   def test_index_template(self):
