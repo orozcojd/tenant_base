@@ -1,12 +1,15 @@
 # tenant-base
 Simple web application that display records of items from a sqlite database. Utilizes memcached to serve records if records are already cached. Simple filter feature allows searching through records based off key name.
+
 ## 
+
 <div style="max-height:100px; display:flex; justify-content:space-evenly">
   <img src='repo-images/vuejs.png' width="100">
   <img src='repo-images/flask.png' width="100">
   <img src='repo-images/memcached.png' width="100">
   <img src='repo-images/sqlite.png' width="100">
 </div>
+
 ## Installation
 1. Clone Repo
 ```
