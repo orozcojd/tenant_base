@@ -1,8 +1,9 @@
-<DOCTYPE html>
+<!DOCTYPE html>
     <html>
     <head>
       <title>Tent Base Data Store</title>
       <meta charset='utf-8' />
+      <link rel="shortcut icon" href="">
       <link rel="stylesheet" type="text/css" href="static/main.css">
       <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
       <script src="https://unpkg.com/vuex"></script>
@@ -14,8 +15,6 @@
         <div class="main-container">
           <div class="flex-wrap flex-start flex-col">
             <h1>Tenant Base Data Store</h1>
-            <!-- <div class="items-container">
-            </div> -->
             <display-items class="mt-md"></display-items>
           </div>
         </div>
@@ -25,17 +24,27 @@
     <script>
     let mapState = Vuex.mapState
     let mapActions = Vuex.mapActions
+
+    const api = (options) => axios.create({
+			...options,
+      baseURL: '',
+      headers: { 'Access-Control-Allow-Origin': '*' },
+			timeout: 60000,
+    })
     const store = new Vuex.Store({
     state: {
       items: []
     },
     actions: {
+      /**
+       * GET
+       * Fetches items from api and commits mutation to vuex store
+       */
       async getItems( context ) {
-          await axios.get('https://jsonplaceholder.typicode.com/posts/').then(function(rsp) {
-            console.log(rsp.data)
-            context.commit('fetchItems', rsp.data)
+          await api().get('/items').then(function(rsp) {
+            context.commit('fetchItems', eval(rsp.data))
           }), function(err) {
-            /* Handle Error */
+            print(err)
           }
       }
     },
@@ -47,19 +56,23 @@
   })
   Vue.component('display-items', {
     template: `<div>
-      <h2> Existing Items </h2>
+      <h2> Existing Items {{ '{{ items.length }}'}} </h2>
+      <div>
+        <label for="itemsFilter">Filter by key</label>
+        <input id="itemsFilter" v-model="keyFilter"> </input>
+      </div>
       <div class="items-container" v-if="loaded">
           <div
             class="kv-item"
-            v-for="(item, i) in items"
+            v-for="(item, i) in filteredItems"
             :key="i"
           >
             <div class="inner-item flex-wrap flex-between flex-row">
               <div class="item-data">
-                KEY: {{ item.id }}
+                KEY: {{ '{{ item.key }}' }}
               </div>
               <div class="item-data item-value">
-                <span>VALUE:</span> <span v-show class="blur-data cursor-point">{{ item.title }}</span>
+                <span>VALUE:</span> <span v-show class="blur-data cursor-point">{{ '{{ item.value }}' }}</span>
               </div>                
             </div>
           </div>
@@ -72,7 +85,8 @@
     data() {
       return {
         loaded: false,
-        active: true
+        active: true,
+        keyFilter: ''
       }
     },
     async mounted() {
@@ -80,15 +94,20 @@
       this.loaded = true
     },
     computed: {
+      filteredItems() {
+        return this.keyFilter ? this.items.filter(item => item.key.toLowerCase().includes(this.keyFilter.toLowerCase())) : this.items
+      },
       ...mapState(['items']),
-      
     },
     methods: {
       ...mapActions(['getItems'])
     },
     directives: {
     show: {
-      // directive definition
+      /**
+       * Adds mouse event listeners to bound DOM element
+       * to add/remove blur-data class
+       */
       inserted: function (el, binding, vnode) {
         el.addEventListener('mousedown', e => {
           el.classList.remove('blur-data')
