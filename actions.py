@@ -10,36 +10,31 @@ def init_db():
   ''' Initialize db - creates tables.
   '''
 
-  db = sqlite3.connect('database/items_db.db')
+  db = SqliteDb()
+  conn = db.db()
+  cursor = conn.cursor()
   print('sqlite database connection established.')
-  cursor = db.cursor()
   # cursor.execute(''' DROP TABLE kv_items''')
   cursor.execute('''CREATE TABLE IF NOT EXISTS kv_items(id INTEGER PRIMARY KEY, key key VARCHAR(50), value key VARCHAR(50))''')
-  print('populating database with 1000 records...')
-
+  
+  print('populating database with 1000 records if not already in db...')
   for item in all_data: # populate database with dummy data
-    add_items(item['key'], item['value'])
-  db.commit()
-  db.close()
+    cursor.execute('''INSERT OR IGNORE INTO kv_items(id, key, value) VALUES(?,?,?)''',
+                  (item['id'], item['key'], item['value']))
+  conn.commit()
+  conn.close()
 
-def dict_factory(cursor, row):
-  ''' Conversion of sqlite row to dict objects
-  '''
-
-  d = {}
-  for indx, col in enumerate(cursor.description):
-      d[col[0]] = row[indx]
-  return d
 
 def add_items(key, val):
   ''' Inserts key,val pair into sqlite and in memcached
   '''
 
-  db = sqlite3.connect('database/items_db.db')
-  cursor = db.cursor()
+  db = SqliteDb()
+  conn = db.db()
+  cursor = conn.cursor()
   cursor.execute('''INSERT INTO kv_items(key, value) VALUES(?,?)''', (key, val))
-  db.commit()
-  db.close()
+  conn.commit()
+  conn.close()
   mcached.set_cached(key, val)
 
 
