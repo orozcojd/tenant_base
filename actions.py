@@ -4,7 +4,7 @@ from pymemcache.client import base
 from config.create import all_data
 from config.sqlitedb import SqliteDb
 
-mcached = Memcached('localhost', 11211) # memcached connection
+mcached = Memcached('localhost', 11212) # memcached connection
 
 def init_db():
   ''' Initialize db - creates tables.
@@ -42,24 +42,30 @@ def get_items(key):
   ''' First checks memcached for query result, if not found
   queries sqlite db and returns result
   '''
-  
+  print('inside get')
   db = SqliteDb()
   try: 
     res = mcached.get_cached(key)
+    print('response is cached!')
   except:
     res = None
     print('Error connecting to memcached server.')
   if res is None:
+    print('inside actions get items')
     if key == 'all_items':
-      print('all items')
+      print('insie getting all sqlite')
+      # print('all items')
       res = db.sel_all()
-      print(res)
+      # print('inside select all')
+      # print(res)
     else:
       query = '''SELECT * FROM kv_items WHERE key=?'''
       res = db.exec_query(query, key)
     try:
-      mcached.set_cached(key, res)
-    except:
+      if res:
+        mcached.set_cached(key, res)
+    except Exception as e:
+      print(e)
       print('Error retrieving data from db.')
   else:
     print('Query was cached, returning result.')
