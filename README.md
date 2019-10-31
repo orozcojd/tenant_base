@@ -26,16 +26,11 @@ $ pip install virtualenv
 $ virtualenv -p /usr/local/bin/python3.8 tbvenv
 $ source tbvenv/bin/activate
 ```
-4. Install packages
+4. Install python-memcache client
 ```
-$ pip install Flask
 $ pip install pymemcache
 ```
-5. Install memcached
-```
-$ brew install memcached
-$ brew services start memcached 
-```
+
 ## Usage
 1. Run the development server
 ```

@@ -37,7 +37,6 @@ def add_items(key, val):
   conn.close()
   mcached.set_cached(key, val)
 
-
 def get_items(key):
   ''' First checks memcached for query result, if not found
   queries sqlite db and returns result

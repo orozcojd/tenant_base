@@ -3,7 +3,7 @@
 <head>
   <title>Tent Base Data Store</title>
   <meta charset='utf-8' />
-  <!-- <link rel="shortcut icon" href=""> -->
+  <link rel="shortcut icon" href="">
   <link rel="stylesheet" type="text/css" href="static/main.css">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/vuex"></script>
@@ -18,7 +18,7 @@
     <div class="main-container">
       <div class="flex-wrap flex-start flex-col">
         <h1>Tenant Base Data Store</h1>
-        <display-items class="mt-md"> </display-items>
+        <display-items class="mt-md"></display-items>
       </div>
     </div>
   </div>
@@ -44,13 +44,11 @@
       * Fetches items from api and commits mutation to vuex store
       */
       async getItems( context ) {
-        print('getting items')
-        await api().get('/items').then(function(rsp) {
-          print(rsp)
-          // context.commit('fetchItems', eval(rsp.data))
-        }), function(err) {
-          print(err)
-        }
+          await api().get('/items').then(function(rsp) {
+            context.commit('fetchItems', eval(rsp.data))
+          }), function(err) {
+            print(err)
+          }
       }
     },
     mutations: {

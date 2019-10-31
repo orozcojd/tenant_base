@@ -1,6 +1,5 @@
 from pymemcache.client import base
 
-
 class Memcached:
   def __init__(self, uri, port):
     self.uri = uri
