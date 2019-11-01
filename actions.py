@@ -52,3 +52,20 @@ def get_items(key):
     # print(res)
     print('Query was cached, returning result.')
   return res
+
+def delete_items(key):
+    ''' Deletes items by key from sqlite and memcached.
+    '''
+
+    try: 
+      mcached.del_cached(key)
+      db = SqliteDb()
+      query = '''DELETE FROM kv_items WHERE key=?'''
+      print(key)
+      db.exec_query(query, (key,))
+      print('Deletion successful from sqlite and memcached.')
+      return True
+    except Exception as e:
+      print(e)
+      print('Error occurred trying to delete from db or memcached.')
+      return False
