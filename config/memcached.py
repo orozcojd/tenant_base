@@ -12,7 +12,6 @@ class Memcached:
     return self.conn().get(key)
 
   def set_cached(self, key, val):
-    print('inside memached set cached')
     self.conn().set(key, val)
   
   def del_cached(self, key):

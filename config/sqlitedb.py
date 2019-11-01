@@ -1,14 +1,16 @@
 import sqlite3
 
 class SqliteDb:
+  path = 'database/items_db.db'
 
   def db(self):
     ''' Creates and returns database connection
     '''
 
-    db = sqlite3.connect('database/items_db.db')
+    db = sqlite3.connect(self.path)
     db.row_factory = self.dict_factory
     return db
+
   def cursor(self, db):
     ''' Creates cursor object from database connecction and returns it
     '''
@@ -36,13 +38,16 @@ class SqliteDb:
     res = cursor.fetchall()
     return res
   
-  def exec_query(self, query, key):
+  def exec_query(self, query, vals=()):
     ''' Executes query of given key and returns result
     '''
     
     db = self.db()
     cursor = self.cursor(db)
-    cursor.execute(query, (key,))
+    if vals:
+      cursor.execute(query, vals)
+    else:
+      cursor.execute(query)
     res = cursor.fetchall()
     db.commit()
     db.close()
